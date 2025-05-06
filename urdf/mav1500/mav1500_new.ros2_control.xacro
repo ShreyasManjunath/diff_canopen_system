@@ -42,6 +42,19 @@
   <xacro:property name="inverse_factor" default="1.0"/>
 </xacro:unless>
 
+<!-- Fixes NAN values for position in joint_states topic, avoiding TF exceptions -->
+<!-- This sets 0 for wheel positions thereby avoiding any fatal issues -->
+<!-- TODO: use correct index and scaling factor, if position encoder support is provided from the motor interface -->
+<state_interface name="position" data_type="int16_t">
+  <param name="data_type">int16_t</param>
+  <param name="min">-32768</param>
+  <param name="max">32767</param>
+  <param name="index">0x6064</param>
+  <param name="subindex">0x00</param>
+  <param name="unit">rad</param>
+  <param name="from_hw_scaling_factor">${inverse_factor * 0.001}</param>
+</state_interface>
+
 <!-- RPDO 1 -->
   <!-- Control Word -->
   <command_interface name="drive_enable" data_type="bool">
